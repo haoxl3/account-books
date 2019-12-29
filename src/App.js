@@ -1,6 +1,35 @@
 import React from 'react';
 import logo from './logo.svg';
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
+import PriceList from './components/PriceList';
+
+const items = [
+  {
+    "id": 1,
+    "title":"吃饭",
+    "price": 200,
+    "date": "2019-12-31",
+    "category": {
+      "id": "1",
+      "name": "吃喝",
+      "type": "outcome",
+      "iconName": "ios-plane"
+    }
+  },
+  {
+    "id": 2,
+    "title":"吃饭2",
+    "price": 200,
+    "date": "2019-12-31",
+    "category": {
+      "id": "2",
+      "name": "吃喝2",
+      "type": "outcome",
+      "iconName": "ios-plane"
+    }
+  }
+]
 
 function App() {
   return (
@@ -19,6 +48,10 @@ function App() {
           Learn React
         </a>
       </header>
+      <PriceList 
+        items={items}
+        onModifyItem={(item) => {alert(item.id)}}
+      />
     </div>
   );
 }
