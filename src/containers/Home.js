@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PriceList from '../components/PriceList';
 import ViewTab from '../components/ViewTab';
-import {LIST_VIEW,CHART_VIEW, TYPE_OUTCOME, TYPE_INCOME, parseToYearAndMonth} from '../utility'
+import {LIST_VIEW,CHART_VIEW, TYPE_OUTCOME, TYPE_INCOME, parseToYearAndMonth, padLeft} from '../utility'
 import MonthPicker from '../components/MonthPicker'
 import CreateBtn from '../components/CreateBtn'
 import TotalPrice from '../components/TotalPrice'
@@ -57,11 +57,22 @@ class Home extends Component {
             tabView: view
         })
     }
-    changeDate = () => {
-
+    changeDate = (year, month) => {
+        this.setState({
+            currentDate: {year, month}
+        })
     }
-    modifyItem = () => {
-
+    modifyItem = (modifiedItem) => {
+        const modifiedItems = this.state.items.map(item => {
+            if (item.id === modifiedItem.id) {
+                return {...item, title: '更新后的标题'}
+            } else {
+                return item
+            }
+        })
+        this.setState({
+            items: modifiedItems
+        })
     }
     createItem = () => {
         // 给items添加一项
@@ -69,14 +80,22 @@ class Home extends Component {
             items: [newItem, ...this.state.items]
         })
     }
-    deleteItem = () => {
-
+    deleteItem = (deletedItem) => {
+        const filteredItems = this.state.items.filter(item => item.id !== deletedItem.id)
+        this.setState({
+            items: filteredItems
+        })
     }
     render() {
         const {items, currentDate, tabView} = this.state
         const itemsWithCategory = items.map(item => {
             item.category = categoies[item.cid]
             return item
+        }).filter(item => {
+            console.log(item.date)
+            console.log(`${currentDate.year}-${padLeft(currentDate.month)}`)
+            console.log(item.date.includes(`${currentDate.year}-${padLeft(currentDate.month)}`))
+            return item.date.includes(`${currentDate.year}-${padLeft(currentDate.month)}`)
         })
         let totalIncome = 0, totalOutcome = 0
         itemsWithCategory.forEach(item => {
