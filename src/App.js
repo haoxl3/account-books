@@ -1,69 +1,12 @@
 import React from 'react';
-import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
-import PriceList from './components/PriceList';
-import ViewTab from './components/ViewTab';
-import {LIST_VIEW} from './utility'
-import MonthPicker from './components/MonthPicker'
-
-const items = [
-  {
-    "id": 1,
-    "title":"吃饭",
-    "price": 200,
-    "date": "2019-12-31",
-    "category": {
-      "id": "1",
-      "name": "吃喝",
-      "type": "outcome",
-      "iconName": "ios-plane"
-    }
-  },
-  {
-    "id": 2,
-    "title":"吃饭2",
-    "price": 200,
-    "date": "2019-12-31",
-    "category": {
-      "id": "2",
-      "name": "吃喝2",
-      "type": "outcome",
-      "iconName": "ios-plane"
-    }
-  }
-]
+import Home from './containers/Home'
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <PriceList 
-        items={items}
-        onModifyItem={(item) => {alert(item.id)}}
-      />
-      <ViewTab 
-        activeTab={LIST_VIEW}
-        onTabChange={(view) => {console.log(view)}}
-      />
-      <MonthPicker
-        year={2019}
-        month={1}
-        onChange={(year,month) => {console.log(year, month)}}
-      />
+      <Home/>
     </div>
   );
 }

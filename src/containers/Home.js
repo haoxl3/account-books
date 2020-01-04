@@ -1,0 +1,127 @@
+import React, {Component} from 'react';
+import PriceList from '../components/PriceList';
+import ViewTab from '../components/ViewTab';
+import {LIST_VIEW,CHART_VIEW, TYPE_OUTCOME, TYPE_INCOME, parseToYearAndMonth} from '../utility'
+import MonthPicker from '../components/MonthPicker'
+import CreateBtn from '../components/CreateBtn'
+import TotalPrice from '../components/TotalPrice'
+
+const categoies = {
+    "1": {
+        "id": "1",
+        "name": "吃喝",
+        "type": "outcome",
+        "iconName": "ios-plane"
+      },
+    "2": {
+        "id": "2",
+        "name": "吃喝2",
+        "type": "outcome",
+        "iconName": "ios-plane"
+    }
+}
+const items = [
+    {
+      "id": 1,
+      "title":"吃饭",
+      "price": 200,
+      "date": "2019-12-31",
+      "cid": 1 
+    },
+    {
+      "id": 2,
+      "title":"吃饭2",
+      "price": 200,
+      "date": "2019-12-31",
+      "cid": 2
+    }
+]
+const newItem = {
+    "id": 3,
+    "title":"新添加的项目",
+    "price": 200,
+    "date": "2019-12-31",
+    "cid": 1
+}
+class Home extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            items,
+            currentDate: parseToYearAndMonth(),
+            tabView: LIST_VIEW
+        }
+    }
+    changeView = (view) => {
+        this.setState({
+            tabView: view
+        })
+    }
+    changeDate = () => {
+
+    }
+    modifyItem = () => {
+
+    }
+    createItem = () => {
+        // 给items添加一项
+        this.setState({
+            items: [newItem, ...this.state.items]
+        })
+    }
+    deleteItem = () => {
+
+    }
+    render() {
+        const {items, currentDate, tabView} = this.state
+        const itemsWithCategory = items.map(item => {
+            item.category = categoies[item.cid]
+            return item
+        })
+        let totalIncome = 0, totalOutcome = 0
+        itemsWithCategory.forEach(item => {
+            if (item.category.type === TYPE_OUTCOME) {
+                totalOutcome += item.price
+            }
+            else {
+                totalIncome += item.price
+            }
+        })
+        return (
+            <React.Fragment>
+                <header className="App-header">
+                    <div className="row">
+                        <div className="col">
+                            <MonthPicker
+                                year={currentDate.year}
+                                month={currentDate.month}
+                                onChange={this.changeDate}
+                            />
+                        </div>
+                        <div className="col">
+                            <TotalPrice
+                                income={totalIncome}
+                                outcome={totalOutcome}
+                            />
+                        </div>
+                    </div>
+                </header>
+                <div className="content-area py-3 px-3">
+                    <ViewTab activeTab={tabView} onTabChange={this.changeView }></ViewTab>
+                    <CreateBtn onClick={this.createItem}/>
+                    {tabView === LIST_VIEW &&
+                        <PriceList
+                            items={items}
+                            onModifyItem={this.modifyItem}
+                            onDeleteItem={this.deleteItem}
+                        />
+                    }
+                    {tabView === CHART_VIEW &&
+                        <h1>图表区域</h1>
+                    }
+                </div>
+            </React.Fragment>
+        )
+    }
+}
+export default Home
