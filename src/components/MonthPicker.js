@@ -10,6 +10,21 @@ class MonthPicker extends React.Component {
             selectedYear: this.props.year
         }
     }
+    componentDidMount() {
+        document.addEventListener('click', this.handleClick, false)
+    }
+    componentWillUnmount() {
+        document.removeEventListener('click', this.handleClick, false)
+    }
+    handleClick = (event) => {
+        // 如果点击日期本身则返回，否则关闭日期组件
+        if (this.node.contains(event.target)) {
+            return
+        }
+        this.setState({
+            isOpen: false
+        })
+    }
     // 如果不想使用bind，可使用() => {}代替，默认在create-react-app中开启
     toggleDropdown = (event) => {
         event.preventDefault()
@@ -39,7 +54,7 @@ class MonthPicker extends React.Component {
         const monthRange = range(12, 1)
         const yearRange = range(9, -4).map(number => number + year)
         return (
-            <div className="dropdown month-picker-component">
+            <div className="dropdown month-picker-component" ref={(ref) => {this.node = ref}}>
                 <h4>选择月份</h4>
                 <button 
                     className="btn btn-lg btn-secondary dropdown-toggle"
