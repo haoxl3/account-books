@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
+import Ionicon from 'react-ionicons'
 import PriceList from '../components/PriceList';
 import ViewTab from '../components/ViewTab';
 import {LIST_VIEW,CHART_VIEW, TYPE_OUTCOME, TYPE_INCOME, parseToYearAndMonth, padLeft} from '../utility'
 import MonthPicker from '../components/MonthPicker'
 import CreateBtn from '../components/CreateBtn'
 import TotalPrice from '../components/TotalPrice'
+import {Tabs, Tab} from '../components/Tabs'
 
 const categoies = {
     "1": {
@@ -43,18 +45,20 @@ const newItem = {
     "date": "2019-12-31",
     "cid": 1
 }
+const tabsText = [LIST_VIEW,CHART_VIEW]
+
 class Home extends Component {
     constructor(props) {
         super(props)
         this.state = {
             items,
             currentDate: parseToYearAndMonth(),
-            tabView: LIST_VIEW
+            tabView: tabsText[0]
         }
     }
-    changeView = (view) => {
+    changeView = (index) => {
         this.setState({
-            tabView: view
+            tabView: tabsText[index]
         })
     }
     changeDate = (year, month) => {
@@ -126,6 +130,26 @@ class Home extends Component {
                     </div>
                 </header>
                 <div className="content-area py-3 px-3">
+                    <Tabs activeIndex={0} onTabChange={this.changeView}>
+                        <Tab>
+                        <Ionicon 
+                            className="rounded-circle mr-2"
+                            fontSize="25px"
+                            color={'#007bff'}
+                            icon='ios-paper'
+                        />
+                        列表模式
+                        </Tab>
+                        <Tab>
+                        <Ionicon 
+                            className="rounded-circle mr-2"
+                            fontSize="25px"
+                            color={'#007bff'}
+                            icon='ios-pie'
+                        />
+                        图表模式
+                        </Tab>
+                    </Tabs>
                     <ViewTab activeTab={tabView} onTabChange={this.changeView }></ViewTab>
                     <CreateBtn onClick={this.createItem}/>
                     {tabView === LIST_VIEW &&
