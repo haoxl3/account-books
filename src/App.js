@@ -16,11 +16,22 @@ class App extends Component {
             items: flatternArr(testItems),
             categories: flatternArr(testCategories)
         }
+        // 顶部actions包括所有的数据处理方法，通过AppContext.provider的actions自顶向下传
+        this.actions = {
+            deleteItem: (item) => {
+                debugger
+                delete this.state.items[item.id]
+                this.setState({
+                    items: this.state.items
+                })
+            }
+        }
     }
     render() {
         return (
             <AppContext.Provider value={{
-                state: this.state
+                state: this.state,
+                actions: this.actions
             }}>
                 <Router>
                     <div className="App">

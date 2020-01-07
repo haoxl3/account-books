@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Ionicon from 'react-ionicons'
+import {withRouter} from 'react-router-dom'
 import PriceList from '../components/PriceList';
 import ViewTab from '../components/ViewTab';
 import {LIST_VIEW,CHART_VIEW, TYPE_OUTCOME, TYPE_INCOME, parseToYearAndMonth, padLeft} from '../utility'
@@ -67,29 +68,15 @@ class Home extends Component {
             currentDate: {year, month}
         })
     }
-    modifyItem = (modifiedItem) => {
-        const modifiedItems = this.state.items.map(item => {
-            if (item.id === modifiedItem.id) {
-                return {...item, title: '更新后的标题'}
-            } else {
-                return item
-            }
-        })
-        this.setState({
-            items: modifiedItems
-        })
+    modifyItem = (item) => {
+        this.props.history.push(`/edit/${item.id}`)
     }
     createItem = () => {
-        // 给items添加一项
-        this.setState({
-            items: [newItem, ...this.state.items]
-        })
+        // 路由跳转到create页面
+        this.props.history.push('/create')
     }
-    deleteItem = (deletedItem) => {
-        const filteredItems = this.state.items.filter(item => item.id !== deletedItem.id)
-        this.setState({
-            items: filteredItems
-        })
+    deleteItem = (item) => {
+        this.props.actions.deleteItem(item)
     }
     render() {
         const {data} = this.props
@@ -166,4 +153,4 @@ class Home extends Component {
         )
     }
 }
-export default withContext(Home)
+export default withRouter(withContext(Home))
