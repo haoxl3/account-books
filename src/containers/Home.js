@@ -7,6 +7,7 @@ import MonthPicker from '../components/MonthPicker'
 import CreateBtn from '../components/CreateBtn'
 import TotalPrice from '../components/TotalPrice'
 import {Tabs, Tab} from '../components/Tabs'
+import withContext from '../WithContext'
 
 const categoies = {
     "1": {
@@ -91,14 +92,12 @@ class Home extends Component {
         })
     }
     render() {
+        const {data} = this.props
         const {items, currentDate, tabView} = this.state
         const itemsWithCategory = items.map(item => {
             item.category = categoies[item.cid]
             return item
         }).filter(item => {
-            console.log(item.date)
-            console.log(`${currentDate.year}-${padLeft(currentDate.month)}`)
-            console.log(item.date.includes(`${currentDate.year}-${padLeft(currentDate.month)}`))
             return item.date.includes(`${currentDate.year}-${padLeft(currentDate.month)}`)
         })
         let totalIncome = 0, totalOutcome = 0
@@ -167,4 +166,4 @@ class Home extends Component {
         )
     }
 }
-export default Home
+export default withContext(Home)

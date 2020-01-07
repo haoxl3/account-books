@@ -7,19 +7,31 @@ import Create from './containers/Create'
 import {testItems, testCategories} from './testData'
 import {flatternArr} from './utility'
 
-console.log(flatternArr(testItems))
+// 创建一个context来实现非父子组件间数据传递
+export const AppContext = React.createContext()
 class App extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            items: flatternArr(testItems),
+            categories: flatternArr(testCategories)
+        }
+    }
     render() {
         return (
-            <Router>
-                <div className="App">
-                    <div className="container pb-5">
-                        <Route path="/" exact component={Home}></Route>
-                        <Route path="/create" component={Create}></Route>
-                        <Route path="/edit/:id" component={Create}></Route>
+            <AppContext.Provider value={{
+                state: this.state
+            }}>
+                <Router>
+                    <div className="App">
+                        <div className="container pb-5">
+                            <Route path="/" exact component={Home}></Route>
+                            <Route path="/create" component={Create}></Route>
+                            <Route path="/edit/:id" component={Create}></Route>
+                        </div>
                     </div>
-                </div>
-            </Router>
+                </Router>
+            </AppContext.Provider>
         )
     }
 }
