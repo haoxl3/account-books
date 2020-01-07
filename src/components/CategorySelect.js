@@ -43,3 +43,4 @@ class CategorySelect extends React.Component {
         )
     }
 }
+export default CategorySelect
