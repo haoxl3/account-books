@@ -37,3 +37,21 @@ export const flatternArr = (arr) => {
         return map
     }, {})
 }
+
+
+export const Colors = {
+    blue: '#347eff',
+    deepBlue: '#61dafb',
+    green: '#28a745',
+    red: '#dc3545',
+    gray: '#555',
+    lightGray: '#efefef',
+    white: '#fff',
+}
+
+export const ID = () => {
+    // Math.random should be unique because of its seeding algorithm.
+    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+    // after the decimal.
+    return '_' + Math.random().toString(36).substr(2, 9);
+}

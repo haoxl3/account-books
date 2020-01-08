@@ -5,7 +5,7 @@ import './App.css'
 import Home from './containers/Home'
 import Create from './containers/Create'
 import {testItems, testCategories} from './testData'
-import {flatternArr} from './utility'
+import {flatternArr, ID, parseToYearAndMonth} from './utility'
 
 // 创建一个context来实现非父子组件间数据传递
 export const AppContext = React.createContext()
@@ -23,6 +23,28 @@ class App extends Component {
                 delete this.state.items[item.id]
                 this.setState({
                     items: this.state.items
+                })
+            },
+            createItem: (data, categoryId) => {
+                debugger
+                const newId = ID()
+                const parsedDate = parseToYearAndMonth(data.date)
+                data.monthCategory = `${parsedDate.year}-${parsedDate.month}`
+                data.timestamp = new Date(data.date).getTime()
+                const newItem = {...data, id: newId, cid: categoryId}
+                // 将新项添加到items最后
+                this.setState({
+                    items: {...this.state.items, [newId]: newItem}
+                })
+            },
+            updateItem: (item, updatedCategoryId) => {
+                const modifedItem = {
+                    ...item,
+                    cid: updatedCategoryId,
+                    timestamp: new Date(item.date).getTime()
+                }
+                this.setState({
+                    items: {...this.state.items, [modifedItem.id]: modifedItem}
                 })
             }
         }
