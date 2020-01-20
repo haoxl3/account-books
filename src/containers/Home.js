@@ -9,54 +9,20 @@ import CreateBtn from '../components/CreateBtn'
 import TotalPrice from '../components/TotalPrice'
 import {Tabs, Tab} from '../components/Tabs'
 import withContext from '../WithContext'
+import Loader from '../components/Loader'
 
-const categoies = {
-    "1": {
-        "id": "1",
-        "name": "吃喝",
-        "type": "outcome",
-        "iconName": "ios-plane"
-      },
-    "2": {
-        "id": "2",
-        "name": "吃喝2",
-        "type": "outcome",
-        "iconName": "ios-plane"
-    }
-}
-const items = [
-    {
-      "id": 1,
-      "title":"吃饭",
-      "price": 200,
-      "date": "2019-12-31",
-      "cid": 1 
-    },
-    {
-      "id": 2,
-      "title":"吃饭2",
-      "price": 200,
-      "date": "2019-12-31",
-      "cid": 2
-    }
-]
-const newItem = {
-    "id": 3,
-    "title":"新添加的项目",
-    "price": 200,
-    "date": "2019-12-31",
-    "cid": 1
-}
+
 const tabsText = [LIST_VIEW,CHART_VIEW]
 
 class Home extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            items,
-            currentDate: parseToYearAndMonth(),
             tabView: tabsText[0]
         }
+    }
+    componentDidMount() {
+        this.props.actions.getInitalData()
     }
     changeView = (index) => {
         this.setState({
@@ -64,9 +30,7 @@ class Home extends Component {
         })
     }
     changeDate = (year, month) => {
-        this.setState({
-            currentDate: {year, month}
-        })
+        this.props.actions.selectNewMonth(year, month)
     }
     modifyItem = (item) => {
         this.props.history.push(`/edit/${item.id}`)
@@ -80,12 +44,12 @@ class Home extends Component {
     }
     render() {
         const {data} = this.props
-        const {items, currentDate, tabView} = this.state
+        const {items, categories, currentDate, isLoading} = data
+        const {tabView} = this.state
+        debugger
         const itemsWithCategory = items.map(item => {
             item.category = categoies[item.cid]
             return item
-        }).filter(item => {
-            return item.date.includes(`${currentDate.year}-${padLeft(currentDate.month)}`)
         })
         let totalIncome = 0, totalOutcome = 0
         itemsWithCategory.forEach(item => {
@@ -116,37 +80,42 @@ class Home extends Component {
                     </div>
                 </header>
                 <div className="content-area py-3 px-3">
-                    <Tabs activeIndex={0} onTabChange={this.changeView}>
-                        <Tab>
-                        <Ionicon 
-                            className="rounded-circle mr-2"
-                            fontSize="25px"
-                            color={'#007bff'}
-                            icon='ios-paper'
-                        />
-                        列表模式
-                        </Tab>
-                        <Tab>
-                        <Ionicon 
-                            className="rounded-circle mr-2"
-                            fontSize="25px"
-                            color={'#007bff'}
-                            icon='ios-pie'
-                        />
-                        图表模式
-                        </Tab>
-                    </Tabs>
-                    <ViewTab activeTab={tabView} onTabChange={this.changeView }></ViewTab>
-                    <CreateBtn onClick={this.createItem}/>
-                    {tabView === LIST_VIEW &&
-                        <PriceList
-                            items={items}
-                            onModifyItem={this.modifyItem}
-                            onDeleteItem={this.deleteItem}
-                        />
-                    }
-                    {tabView === CHART_VIEW &&
-                        <h1>图表区域</h1>
+                    {isLoading && <Loader/>}
+                    {!isLoading &&
+                        <React.Fragment>
+                            <Tabs activeIndex={0} onTabChange={this.changeView}>
+                                <Tab>
+                                <Ionicon 
+                                    className="rounded-circle mr-2"
+                                    fontSize="25px"
+                                    color={'#007bff'}
+                                    icon='ios-paper'
+                                />
+                                列表模式
+                                </Tab>
+                                <Tab>
+                                <Ionicon 
+                                    className="rounded-circle mr-2"
+                                    fontSize="25px"
+                                    color={'#007bff'}
+                                    icon='ios-pie'
+                                />
+                                图表模式
+                                </Tab>
+                            </Tabs>
+                            <ViewTab activeTab={tabView} onTabChange={this.changeView }></ViewTab>
+                            <CreateBtn onClick={this.createItem}/>
+                            {tabView === LIST_VIEW &&
+                                <PriceList
+                                    items={items}
+                                    onModifyItem={this.modifyItem}
+                                    onDeleteItem={this.deleteItem}
+                                />
+                            }
+                            {tabView === CHART_VIEW &&
+                                <h1>图表区域</h1>
+                            }
+                        </React.Fragment>
                     }
                 </div>
             </React.Fragment>

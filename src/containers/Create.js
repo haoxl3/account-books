@@ -18,6 +18,10 @@ class Create extends React.Component {
             selectedCategory: (id && items[id]) ? categories[items[id].cid].type : null
         }
     }
+    componentDidMount() {
+        const {id} = this.props.match.params
+        this.props.actions.getEditData(id)
+    }
     tabChange = (index) => {
         this.setState({
             selectedTab: tabsText[index]
@@ -30,12 +34,15 @@ class Create extends React.Component {
         // react isEditMode判断是否是修改
         if(!isEditMode) {
             // create, 将表单的内容及分类传出去
-            this.props.actions.createItem(data, this.state.selectedCategory.id)
+            this.props.actions.createItem(data, this.state.selectedCategory.id).then(() => {
+                this.props.history.push('/')
+            })
         } else {
             // update
-            this.props.actions.updateItem(data, this.state.selectedCategory.id)
+            this.props.actions.updateItem(data, this.state.selectedCategory.id).then(() => {
+                this.props.history.push('/')
+            })
         }
-        this.props.history.push('/')
     }
     selectCategory = (category) => {
         this.setState({

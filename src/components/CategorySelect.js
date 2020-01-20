@@ -11,15 +11,13 @@ class CategorySelect extends React.Component {
         }
     }
     selectCategory = (event, category) => {
-        this.setState({
-            selectedCategoryId: category.id
-        })
         this.props.onSelectCategory(category)
         event.preventDefault()
     }
     render() {
-        const {categories} = this.props
-        const {selectedCategoryId} = this.state
+        const {categories, selectedCategory} = this.props
+        const selectedCategoryId = selectedCategory && selectedCategory.id
+        // const {selectedCategoryId} = this.state
         return(
             <div className="category-select-component">
                 <div className="row">
